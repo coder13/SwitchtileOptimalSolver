@@ -50,12 +50,14 @@ function Square3 (d) {
 	this.get = function() {
 		return this.data.join('');
 	};
+}
 
-	this.apply = function(moves) {
-		moves.forEach(function (i) {
-			this[i[0]](i[1]);
-		});
-	};
+function apply(moves, s) {
+	var s3 = s || new Square3();
+	moves.forEach(function (i) {
+		s3[i[0]](i[1]);
+	});
+	return s3;
 }
 
 moves = [['R', 1], ['M', 1], ['L', 1], ['U', 1], ['D', 1], ['E', 1], 
@@ -65,17 +67,20 @@ var positions = [];
 
 var total = 0;
 
-function a(s, moves) {
+function count(n, mvs) {
+	if (n < 1) {
+		var s = apply(mvs);
 
-}
+		total += s.solved() ? 0 : 1;
 
-function c(n, mvs) {
-	if (n < 1)
+		if (positions.indexOf(s.get()) < 0) {
+			positions.push(s.get());
+		}
 		return;
-	if (!mvs && n == 1) { // Bottom most.
+	}
+	if (!mvs && n == 1) {
 		for (var i = 0; i < moves.length; i++) {
-			var s = new Square3();
-			s[moves[i][0]](moves[i][1]);
+			var s = apply([moves[i]]);
 			total += s.solved() ? 0 : 1;
 			if (positions.indexOf(s.get()) < 0) {
 				positions.push(s.get());
@@ -83,51 +88,26 @@ function c(n, mvs) {
 		}
 	} else if (!mvs) { //bottom most
 		for (var i = 0; i < moves.length; i++) {
-			console.log(n);
-			console.log(typeof c)
-			c(n-1, s, [moves[i]]);
-
-		}
-	} if (mvs && n == 1) { // topmost
-		for (var i = 0; i < moves.length; i++) {
-			var s = new Square3().apply(moves);
-
-			total += s.solved() ? 0 : 1;
-
-			if (positions.indexOf(s.get()) < 0) {
-				positions.push(s.get());
-			}
+			console.log(i);
+			count(n-1, [moves[i]]);
 		}
 	} else if(mvs) {
 		for (var i = 0; i < moves.length; i++) {
-			c(n-1, s, mvs.concat(moves[i]));
+			if (moves[i][0] == mvs[mvs.length-1][0] && 
+				moves[i][1] + mvs[mvs.length-1][1] == 0){
+				continue;
+			}
+			count(n-1, mvs.concat([moves[i]]));
 		}
 	}
 }
 
-// for (var i = 0; i < moves.length; i++) {
-// 	if (i == j + 6)
-// 			continue;
-// 	for (var j = 0; j < moves.length; j++) {
-// 		if (j == k + 6)
-// 			continue;
-// 		for (var k = 0; k < moves.length; k++) {
-// 			var s = new Square3();
-// 			s[moves[i][0]](moves[i][1]);
-// 			s[moves[j][0]](moves[j][1]);
-// 			s[moves[k][0]](moves[k][1]);
-			
-// 			total += s.solved() ? 0:1;
-
-// 			if (positions.indexOf(s.get()) < 0) {
-// 				positions.push(s.get());
-// 			}
-
-// 		}
-// 	}
-// }
-
-c(3);
-
-console.log(total);
-console.log(positions.length);
+function main (n) {
+	total = 0;
+	positions = [];
+	count(n);
+	console.log('After ', n, 'moves: ');
+	console.log('total unsolved: ', total);
+	console.log('total: unique: ', positions.length);
+}
+main(Number(process.argv[2])||1);

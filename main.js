@@ -136,6 +136,8 @@ function main (n) {
 	console.log('total unsolved: ', total);
 	console.log('total: unique: ', positions.length);
 }
+console.time("time");
 for (var i = 1; i < (Number(process.argv[2] || 1))+1; i++) {
 	main(i);
 }
+console.timeEnd("time");

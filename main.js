@@ -116,14 +116,34 @@ function count(n, mvs) {
 		}
 		return;
 	} if (!mvs) { //bottom most
-		moves.forEach(function (i) {
+		// moves.forEach(function (i) {
 			
 			async.parallel([function () {
-					process.stdout.write(i + " ");
-					count(n-1, [i]);
-					done(n);
-				}], done);
-		});
+				count(n-1, [moves[0]]);
+			}, function () {
+				count(n-1, [moves[1]]);
+			}, function () {
+				count(n-1, [moves[2]]);
+			}, function () {
+				count(n-1, [moves[3]]);
+			}, function () {
+				count(n-1, [moves[4]]);
+			}, function () {
+				count(n-1, [moves[5]]);
+			}, function () {
+				count(n-1, [moves[6]]);
+			}, function () {
+				count(n-1, [moves[7]]);
+			}, function () {
+				count(n-1, [moves[8]]);
+			}, function () {
+				count(n-1, [moves[9]]);
+			}, function () {
+				count(n-1, [moves[10]]);
+			}, function () {
+				count(n-1, [moves[11]]);
+			}, ], done());
+		// });
 
 	} else if(mvs) {
 		moves.forEach(function (i) {

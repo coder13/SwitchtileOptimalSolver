@@ -67,6 +67,41 @@ var positions = [];
 
 var total = 0;
 
+// function count(n, mvs) {
+// 	if (n < 1) {
+// 		var s = apply(mvs);
+
+// 		total += s.solved() ? 0 : 1;
+
+// 		if (positions.indexOf(s.get()) < 0) {
+// 			positions.push(s.get());
+// 		}
+// 		return;
+// 	}
+// 	if (!mvs && n == 1) {
+// 		for (var i = 0; i < moves.length; i++) {
+// 			var s = apply([moves[i]]);
+// 			total += s.solved() ? 0 : 1;
+// 			if (positions.indexOf(s.get()) < 0) {
+// 				positions.push(s.get());
+// 			}
+// 		}
+// 	} else if (!mvs) { //bottom most
+// 		for (var i = 0; i < moves.length; i++) {
+// 			process.stdout.write(i + " ");
+// 			count(n-1, [moves[i]]);
+// 		}
+// 	} else if(mvs) {
+// 		for (var i = 0; i < moves.length; i++) {
+// 			if (moves[i][0] == mvs[mvs.length-1][0] && 
+// 				moves[i][1] + mvs[mvs.length-1][1] == 0){
+// 				continue;
+// 			}
+// 			count(n-1, mvs.concat([moves[i]]));
+// 		}
+// 	}
+// }
+
 function count(n, mvs) {
 	if (n < 1) {
 		var s = apply(mvs);
@@ -77,28 +112,18 @@ function count(n, mvs) {
 			positions.push(s.get());
 		}
 		return;
-	}
-	if (!mvs && n == 1) {
-		for (var i = 0; i < moves.length; i++) {
-			var s = apply([moves[i]]);
-			total += s.solved() ? 0 : 1;
-			if (positions.indexOf(s.get()) < 0) {
-				positions.push(s.get());
-			}
-		}
-	} else if (!mvs) { //bottom most
-		for (var i = 0; i < moves.length; i++) {
+	} if (!mvs) { //bottom most
+		moves.forEach(function (i) {
 			process.stdout.write(i + " ");
-			count(n-1, [moves[i]]);
-		}
+			count(n-1, [i]);
+		});
 	} else if(mvs) {
-		for (var i = 0; i < moves.length; i++) {
-			if (moves[i][0] == mvs[mvs.length-1][0] && 
-				moves[i][1] + mvs[mvs.length-1][1] == 0){
-				continue;
+		moves.forEach(function (i) {
+			if (i[0] == mvs[mvs.length-1][0] && i[1] + mvs[mvs.length-1][1] == 0) {
+				return;
 			}
-			count(n-1, mvs.concat([moves[i]]));
-		}
+			count(n-1, mvs.concat([i]));
+		});
 	}
 }
 
@@ -114,4 +139,3 @@ function main (n) {
 for (var i = 1; i < (Number(process.argv[2] || 1))+1; i++) {
 	main(i);
 }
-main(Number(process.argv[2])||1);

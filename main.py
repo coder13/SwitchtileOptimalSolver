@@ -1,3 +1,5 @@
+import sys
+
 class Square: 
 	def __init__(self): 
 		self.data = [0,1,2,3,4,5,6,7,8]
@@ -79,26 +81,10 @@ def count(n, moves):
 # 					total += 1
 
 if __name__ == '__main__':
+	print(sys.argv[1])
 	# total = sum([count(i+1, []) for i in range(5)])
-	count(1, [])
-	print('2: ')
-	count(2, [])
-	print('3: ')
-	count(3, [])
-	print('4: ')
-	count(4, [])
+	for i in range(int(sys.argv[1])):
+		print(str(i+1) + ': ')
+		count(i+1, [])
 
-	count(5, [])
-	print('5: ')
-	print(total)
-	print(len(positions))
-	
-	count(6, [])
-	print('6: ')
-	print(total)
-	print(len(positions))
-
-	count(7, [])
-	print('7: ')
-	print(total)
 	print(len(positions))

@@ -60,7 +60,7 @@ function apply(moves, s) {
 	return s3;
 }
 
-moves = [['R', 1], ['M', 1], ['L', 1], ['U', 1], ['D', 1], ['E', 1], 
+moves = [['R', 1], ['M', 1], ['L', 1], ['U', 1], ['D', 1], ['E', 1],
 		 ['R', -1], ['M', -1], ['L', -1], ['U', -1], ['D', -1], ['E', -1]];
 
 var positions = [];
@@ -88,7 +88,7 @@ function count(n, mvs) {
 		}
 	} else if (!mvs) { //bottom most
 		for (var i = 0; i < moves.length; i++) {
-			console.log(i);
+			process.stdout.write(i + " ");
 			count(n-1, [moves[i]]);
 		}
 	} else if(mvs) {
@@ -106,8 +106,12 @@ function main (n) {
 	total = 0;
 	positions = [];
 	count(n);
+	process.stdout.write('\n');
 	console.log('After ', n, 'moves: ');
 	console.log('total unsolved: ', total);
 	console.log('total: unique: ', positions.length);
+}
+for (var i = 1; i < (Number(process.argv[2] || 1))+1; i++) {
+	main(i);
 }
 main(Number(process.argv[2])||1);

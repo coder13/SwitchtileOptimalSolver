@@ -118,7 +118,8 @@ function count(n, mvs) {
 	} if (!mvs) { //bottom most
 		// moves.forEach(function (i) {
 			
-			async.parallel([function () {
+			async.parallel([
+				function () {
 				count(n-1, [moves[0]]);
 			}, function () {
 				count(n-1, [moves[1]]);
@@ -142,7 +143,7 @@ function count(n, mvs) {
 				count(n-1, [moves[10]]);
 			}, function () {
 				count(n-1, [moves[11]]);
-			}, ], done());
+			}], done(null, n));
 		// });
 
 	} else if(mvs) {
@@ -155,9 +156,9 @@ function count(n, mvs) {
 	}
 }
 
-function done(err) {
+function done(err, n) {
 	process.stdout.write('\n');
-	console.log('After ', 'moves: ');
+	console.log('After ', n, 'moves: ');
 	console.log('total unsolved: ', total);
 	console.log('total: unique: ', positions.length);
 

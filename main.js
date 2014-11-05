@@ -1,4 +1,7 @@
+var async = require('async');
+
 var input = process.argv[2];
+
 
 function Square3 (d) {
 	if (!d || d.length != 9)
@@ -114,9 +117,14 @@ function count(n, mvs) {
 		return;
 	} if (!mvs) { //bottom most
 		moves.forEach(function (i) {
-			process.stdout.write(i + " ");
-			count(n-1, [i]);
+			
+			async.parallel([function () {
+					process.stdout.write(i + " ");
+					count(n-1, [i]);
+					done(n);
+				}], done);
 		});
+
 	} else if(mvs) {
 		moves.forEach(function (i) {
 			if (i[0] == mvs[mvs.length-1][0] && i[1] + mvs[mvs.length-1][1] == 0) {
@@ -127,17 +135,16 @@ function count(n, mvs) {
 	}
 }
 
-function main (n) {
-	total = 0;
-	positions = [];
-	count(n);
+function done(err) {
 	process.stdout.write('\n');
-	console.log('After ', n, 'moves: ');
+	console.log('After ', 'moves: ');
 	console.log('total unsolved: ', total);
 	console.log('total: unique: ', positions.length);
+
 }
+
 console.time("time");
 for (var i = 1; i < (Number(process.argv[2] || 1))+1; i++) {
-	main(i);
+	count(i);
 }
 console.timeEnd("time");

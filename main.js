@@ -1,7 +1,5 @@
 var async = require('async');
-
 var input = process.argv[2];
-
 
 function Square3 (d) {
 	if (!d || d.length != 9)
@@ -64,46 +62,9 @@ function apply(moves, s) {
 }
 
 moves = [['R', 1], ['M', 1], ['L', 1], ['U', 1], ['D', 1], ['E', 1],
-		 ['R', -1], ['M', -1], ['L', -1], ['U', -1], ['D', -1], ['E', -1]];
+		['R', -1], ['M', -1], ['L', -1], ['U', -1], ['D', -1], ['E', -1]];
 
-var positions = [];
-
-var total = 0;
-
-// function count(n, mvs) {
-// 	if (n < 1) {
-// 		var s = apply(mvs);
-
-// 		total += s.solved() ? 0 : 1;
-
-// 		if (positions.indexOf(s.get()) < 0) {
-// 			positions.push(s.get());
-// 		}
-// 		return;
-// 	}
-// 	if (!mvs && n == 1) {
-// 		for (var i = 0; i < moves.length; i++) {
-// 			var s = apply([moves[i]]);
-// 			total += s.solved() ? 0 : 1;
-// 			if (positions.indexOf(s.get()) < 0) {
-// 				positions.push(s.get());
-// 			}
-// 		}
-// 	} else if (!mvs) { //bottom most
-// 		for (var i = 0; i < moves.length; i++) {
-// 			process.stdout.write(i + " ");
-// 			count(n-1, [moves[i]]);
-// 		}
-// 	} else if(mvs) {
-// 		for (var i = 0; i < moves.length; i++) {
-// 			if (moves[i][0] == mvs[mvs.length-1][0] && 
-// 				moves[i][1] + mvs[mvs.length-1][1] == 0){
-// 				continue;
-// 			}
-// 			count(n-1, mvs.concat([moves[i]]));
-// 		}
-// 	}
-// }
+var positions = [], total = 0;
 
 function count(n, mvs) {
 	if (n < 1) {
@@ -116,36 +77,12 @@ function count(n, mvs) {
 		}
 		return;
 	} if (!mvs) { //bottom most
-		// moves.forEach(function (i) {
-			
-			async.parallel([
-				function () {
-				count(n-1, [moves[0]]);
-			}, function () {
-				count(n-1, [moves[1]]);
-			}, function () {
-				count(n-1, [moves[2]]);
-			}, function () {
-				count(n-1, [moves[3]]);
-			}, function () {
-				count(n-1, [moves[4]]);
-			}, function () {
-				count(n-1, [moves[5]]);
-			}, function () {
-				count(n-1, [moves[6]]);
-			}, function () {
-				count(n-1, [moves[7]]);
-			}, function () {
-				count(n-1, [moves[8]]);
-			}, function () {
-				count(n-1, [moves[9]]);
-			}, function () {
-				count(n-1, [moves[10]]);
-			}, function () {
-				count(n-1, [moves[11]]);
-			}], done(null, n));
-		// });
-
+		moves.forEach(function (i) {
+			console.time(String(i));
+			process.stdout.write(i[0] + " ");
+			count(n-1, [i]);
+			console.timeEnd(String(i));
+		});
 	} else if(mvs) {
 		moves.forEach(function (i) {
 			if (i[0] == mvs[mvs.length-1][0] && i[1] + mvs[mvs.length-1][1] == 0) {
@@ -156,16 +93,20 @@ function count(n, mvs) {
 	}
 }
 
-function done(err, n) {
+function main (n) {
+	console.time(String(n));
+	console.log(n, 'moves: ');
+	total = 0;
+	positions = [];
+	count(n);
 	process.stdout.write('\n');
-	console.log('After ', n, 'moves: ');
+	console.timeEnd(String(n));
 	console.log('total unsolved: ', total);
 	console.log('total: unique: ', positions.length);
-
+	console.log("\n");
 }
-
 console.time("time");
 for (var i = 1; i < (Number(process.argv[2] || 1))+1; i++) {
-	count(i);
+	main(i);
 }
 console.timeEnd("time");

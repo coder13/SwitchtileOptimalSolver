@@ -47,7 +47,7 @@ def apply(moves):
 		s.swap(Square.moves[m])
 	return s
 
-positions = []
+positions = set()
 
 total = 0
 
@@ -58,18 +58,17 @@ def count(n, moves):
 		s = apply(moves)
 		if not s.solved():
 			total += 1
-		if not (s.data in positions):
-			positions += [s.data];
+		positions.add([s.data]);
 	elif len(moves) == 0:
 		for i in m:
 			print(i)
-			count(n-1, [i])
+			count(n-1, i)
 	else:
 		for i in m: 
 			if i[0] == moves[len(moves)-1][0] and len(i + moves[len(moves)-1]) == 3: 
 				continue
 			else:
-				count(n-1, moves + [i])
+				count(n-1, moves + i)
 
 
 # for i in m:

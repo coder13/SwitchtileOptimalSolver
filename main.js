@@ -70,13 +70,13 @@ function count(n, mvs) {
 	if (n < 1) {
 		var s = apply(mvs);
 
-		total += s.solved() ? 0 : 1;
-
-		if (positions.indexOf(s.get()) < 0) {
-			positions.push(s.get());
+		if (s.solved()) {
+			total += 1;
+			if (positions.indexOf(s.get()) < 0) {
+				positions.push(s.get());
+			}
 		}
-		return;
-	} if (!mvs) { //bottom most
+	} else if (!mvs) { //bottom most
 		moves.forEach(function (i) {
 			console.time(String(i));
 			process.stdout.write(i[0] + " ");

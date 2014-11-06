@@ -70,7 +70,7 @@ function count(n, mvs) {
 	if (n < 1) {
 		var s = apply(mvs);
 
-		if (s.solved()) {
+		if (!s.solved()) {
 			total += 1;
 			if (positions.indexOf(s.get()) < 0) {
 				positions.push(s.get());

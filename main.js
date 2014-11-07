@@ -1,4 +1,5 @@
-var async = require('async');
+var async = require('async'), 
+	_ 	  = require('underscore');
 var input = process.argv[2];
 
 function Square3 (d) {
@@ -60,27 +61,73 @@ function apply(moves, s) {
 	});
 	return s3;
 }
+moves = [['R', 1], ['M', 1], ['L', 1], ['U', 1], ['E', 1], ['D', 1],
+		['R', -1], ['M', -1], ['L', -1], ['U', -1], ['E', -1], ['D', -1]];
 
-moves = [['R', 1], ['M', 1], ['L', 1], ['U', 1], ['D', 1], ['E', 1],
-		['R', -1], ['M', -1], ['L', -1], ['U', -1], ['D', -1], ['E', -1]];
+// R L R' L' == ""
+function simplify(mvs) {
+	// console.log(mvs);
+	if (mvs.length < 3)
+		return mvs;
+	a = [moves[0], moves[1], moves[2], moves[6], moves[7], moves[8]];
+	b = [moves[3], moves[4], moves[5], moves[9], moves[10], moves[11]]
+	var flag;
+	for (var i = 0; i < mvs.length-1; i++) {
+		for (var j = i+1; j < mvs.length; j++) {
+			if (mvs[i][0] == mvs[j][0] && mvs[i][1] + mvs[j][1] == 0 && j - i > 2) {
+				flag = true;
+				var s = mvs.slice(i+1, j-1);
+				
+				s.forEach(function(i) {
+					if (a.indexOf(mvs[i]) != -1) {
+						if (b.indexOf(mvs[i]) != -1) {
+							flag = false;
+						}
+					} else {
+						if (a.indexOf(mvs[i]) != -1) {
+							flag = false;
+						}
+					}
+				});
+				if (flag) {
+					mvs.splice(j,1);
+					mvs.splice(i,1);
+					i = 0;
+					j = 0;
+				}
+			}
+		}
+	}
+	// console.log(mvs);
+	return mvs;
+}
 
-var positions = [], total = 0;
+
+var positions = {0: [], 1: [], 2: [], 
+				 3: [], 4: [], 5: [], 
+				 6: [], 7: [], 8: []}, 
+	master = [],
+	total = 0;
 
 function count(n, mvs) {
 	if (n < 1) {
-		var s = apply(mvs);
+		sMvs = simplify(mvs);
+		var s = apply(sMvs);
 
 		if (!s.solved()) {
 			total += 1;
-			if (positions.indexOf(s.get()) < 0) {
-				positions.push(s.get());
-			}
+			master.push(s.get());
+			if (positions[s.get()[0]].indexOf(s.get()) == -1)
+				positions[s.get()[0]].push(s.get());
 		}
 	} else if (!mvs) { //bottom most
 		moves.forEach(function (i) {
 			console.time(String(i));
 			process.stdout.write(i[0] + " ");
 			count(n-1, [i]);
+
+				// positions = _.uniq(positions);
+				console.log('total: unique: ', unique());
 			console.timeEnd(String(i));
 		});
 	} else if(mvs) {
@@ -93,16 +140,20 @@ function count(n, mvs) {
 	}
 }
 
+function unique() {
+	return positions[0].length + positions[1].length + positions[2].length + 
+		   positions[3].length + positions[4].length + positions[5].length + 
+		   positions[6].length + positions[7].length + positions[8].length;
+}
+
 function main (n) {
 	console.time(String(n));
 	console.log(n, 'moves: ');
-	total = 0;
-	positions = [];
 	count(n);
 	process.stdout.write('\n');
 	console.timeEnd(String(n));
 	console.log('total unsolved: ', total);
-	console.log('total: unique: ', positions.length);
+	console.log('total: unique: ', unique());
 	console.log("\n");
 }
 console.time("time");

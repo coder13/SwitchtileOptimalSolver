@@ -4,12 +4,11 @@ class Square:
 	def __init__(self): 
 		self.data = [0,1,2,3,4,5,6,7,8]
 
-	def swap(self, p): 
+	def swap(self, p):
 		c = self.data[p[0]]
 		self.data[p[0]] = self.data[p[1]]
 		self.data[p[1]] = self.data[p[2]]
 		self.data[p[2]] = c
-
 
 	moves = {"R": [2,5,8], "R'": [8,5,2],
 			 "M": [1,4,7], "M'": [7,4,1],
@@ -39,7 +38,10 @@ class Square:
 	def solved(self): 
 		return self.data == [0,1,2,3,4,5,6,7,8]
 
-m = ["R", "R'", "M", "M'", "L", "L'", "U", "U'", "E", "E'", "D", "D'"]
+	def toString(self): 
+		return self.data[0]
+
+m= ["R", "R'", "M", "M'", "L", "L'", "U", "U'", "E", "E'", "D", "D'"]
 
 def apply(moves): 
 	s = Square()
@@ -47,7 +49,7 @@ def apply(moves):
 		s.swap(Square.moves[m])
 	return s
 
-positions = []
+positions = [[0,1,2,3,4,5,6,7,8]]
 
 total = 0
 
@@ -58,11 +60,11 @@ def count(n, moves):
 		s = apply(moves)
 		if not s.solved():
 			total += 1
-		if not (s.data in positions):
-			positions += [s.data];
+		if not [s.data] in positions: 
+			positions += [s.data]
 	elif len(moves) == 0:
 		for i in m:
-			print(i)
+			print(str(i) + " ")
 			count(n-1, [i])
 	else:
 		for i in m: 
@@ -86,5 +88,6 @@ if __name__ == '__main__':
 	for i in range(int(sys.argv[1])):
 		print(str(i+1) + ': ')
 		count(i+1, [])
+		print("  " + str(len(positions)))
 
-	print(len(positions))
+	# print(positions)
